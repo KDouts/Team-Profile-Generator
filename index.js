@@ -1,6 +1,7 @@
 const Manager = require('./lib/manager');
 const Engineer = require('./lib/engineer');
 const Intern = require('./lib/intern'); 
+const generateHTML = require('./src/generateHTML');
 
 const fs = require('fs'); 
 const inquirer = require('inquirer');
@@ -143,8 +144,25 @@ const addEmployee = () => {
 
 };
 
+const writeFile = data => {
+    fs.writeFile('./dist/index.html', data, err => {
+        if (err) {
+            console.log(err);
+            return;
+        } else {
+            console.log("Your team profile has been successfully created!")
+        }
+    })
+}; 
+
 addManager()
   .then(addEmployee)
   .then(teamArray => {
     return generateHTML(teamArray);
+  })
+  .then(pageHTML => {
+    return writeFile(pageHTML);
+  })
+  .catch(err => {
+ console.log(err);
   });
